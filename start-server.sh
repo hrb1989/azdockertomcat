@@ -18,6 +18,8 @@ do
 done
 echo "Site ready"
 
+# Pretend Tomcat is warming up
+sleep 3m
 
 # Start Apache (foreground so the process does not end)
 /usr/sbin/apache2 -k start -DFOREGROUND
