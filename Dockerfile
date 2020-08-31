@@ -8,7 +8,9 @@ USER root
 ########################################
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get install -y curl 
+RUN apt-get install -y curl
+ENV TZ=Asia/Kolkata
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get install -y apache2
 
 # Make a known working directory for downloads
