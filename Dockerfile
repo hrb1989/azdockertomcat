@@ -12,23 +12,16 @@ RUN apt-get install -y curl
 ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get install -y apache2
-
 # Make a known working directory for downloads
 RUN mkdir /usr/local/downloadtemp
 
 ########################################
 # Install Java
 ########################################
-COPY jdk-9.0.4_linux-x64_bin.tar.gz /usr/local/downloadtemp/jdk-9.0.4.tar.gz
-RUN tar xvzf /usr/local/downloadtemp/jdk-9.0.4.tar.gz -C /usr/local
-RUN rm /usr/local/downloadtemp/jdk-9.0.4.tar.gz
-
-# Set Java environment variablees
-ENV JAVA_HOME /usr/local/jdk-9.0.4
-ENV PATH ${PATH}:${JAVA_HOME}/bin
+RUN apt-get install -y openjdk-11-jdk
 
 ########################################
-# Install and Configure Tomcat 
+# Install and Configure Tomcat
 ########################################
 COPY apache-tomcat-9.0.4.tar.gz /usr/local/downloadtemp/apache-tomcat-9.0.4.tar.gz
 RUN tar xvzf /usr/local/downloadtemp/apache-tomcat-9.0.4.tar.gz -C /usr/local
@@ -45,6 +38,7 @@ ADD tomcat-users.xml /usr/local/apache-tomcat-9.0.4/conf/
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
 
+                                 
 RUN mkdir /usr/local/apache
 RUN mkdir /usr/local/apache/pid
 ENV APACHE_PID_FILE /usr/local/apache/pid/pid$SUFFIX.pid
@@ -79,8 +73,8 @@ EXPOSE 80
 # Copy start up script and Deploy your custom application (WAR file)
 ########################################
 RUN mkdir /usr/local/custom-app
-COPY start-server.sh /usr/local/custom-app/start-server.sh 
-RUN chmod +x /usr/local/custom-app/start-server.sh 
+COPY start-server.sh /usr/local/custom-app/start-server.sh
+RUN chmod +x /usr/local/custom-app/start-server.sh
 
 
 # Deploy custom application http://localhost:8080/sample which gets reversed proxyed to http://localhost/sample
